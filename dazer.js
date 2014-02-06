@@ -1,6 +1,6 @@
 //This file has all the configurations of the app such as each and every aspect of the framework
 
-var config = require('config/app'); 
+var config = require('./config/app'); 
 
 //Start koa
 var koa = require('koa');
@@ -23,4 +23,7 @@ app.use(function *(){
   this.body = 'Hello World Form Dazer';
 });
 
-if (!module.parent) app.listen(3000);
+if (!module.parent) {
+        app.listen(3000);
+        console.log("dazer is up and running");
+};
