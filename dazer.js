@@ -1,3 +1,5 @@
+var session = require('koa-session');
+
 //This file has all the configurations of the app such as each and every aspect of the framework
 
 var config = require('./config/app');
