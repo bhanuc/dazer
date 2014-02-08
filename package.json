@@ -3,17 +3,17 @@
   "description": "'Cause we believe a MVC can be more personal",
   "version": "0.0.1",
   "dependencies": {
-    "co": "^3.0.0",
     "koa": "~0.2.0",
     "koa-mount": "*",
     "co-views": "~0.1.0",
     "ejs": "~0.8.5",
-    "swig": "~1.2.2",
     "koa-logger": "~1.1.0",
     "koa-router": "*",
     "koa-mount": "*",
     "koa-session": "*",
-    "koa-passport": "*"
+    "koa-passport": "*",
+    "koa-jsonp": "*",
+    "mongoose": "*"
   },
   "devDependencies": {
     "co": "*",

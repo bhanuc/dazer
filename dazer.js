@@ -13,12 +13,36 @@ var route = require('./route.js');
 //load logger module for loading logger
 var logger = require('koa-logger');
 //mount different koa app
-var mount = require('koa-mount');
-
+var mount = require('koa-mount'),
+    jsonp = require("koa-jsonp"),
+    mongoose = require('mongoose');
 //load koa
 var koa = require('koa');
 var app = module.exports = koa();
+//set the session options
+app.keys = ['secret'];
+app.use(session());
+if(config.database.username) {
+mongoose.connect('mongodb://'+config.database.username+':'+config.database.password+'@'+config.database.url+':'+port);
+var db = mongoose.connection;
+db.once('open', function callback () {
+  console.log("MongoDB Connection is opened")
+}); 
+} else {
+    mongoose.connect('mongodb://'+config.database.url+':'+config.database.port);
+var db = mongoose.connection;
+db.once('open', function callback () {
+  console.log("MongoDB Connection is opened")
+});
+};
+// MongoDB Error Handling
+db.on('error', console.error.bind(console, 'connection error:'));
 
+
+//use the passport
+var passport = require('koa-passport')
+app.use(passport.initialize())
+app.use(passport.session())
 //load the views
 app.use(mount(views));
 
@@ -28,12 +52,12 @@ app.use(mount(route));
 // Initiate logger
 
 app.use(logger());
+app.use(jsonp());
 
 if(config.controller.need){
  //    activate the controllers
 };
 if(config.model.need){
-    // activate the models
 };
 if(config.policy.need){
     //activate the models

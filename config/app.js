@@ -16,7 +16,16 @@ module.exports = {
 "policy" :  {   
                 "need": true,
                 "folder_name": "policy",
-            }
+            },
+"database": {
+                "need" : true,
+                "username": "",
+                "password": "",
+                "url":"localhost",
+                "port": 27017
+
+
+}
 
         
 };
