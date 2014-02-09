@@ -13,7 +13,10 @@
     "koa-session": "*",
     "koa-passport": "*",
     "koa-jsonp": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "passport-local": "*",
+    "passport-facebook": "*",
+    "koa-formidable": "*"
   },
   "devDependencies": {
     "co": "*",
