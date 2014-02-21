@@ -19,6 +19,8 @@ Please Note that this is an early alpha project but if you still want to use it 
 Project Guidelines:
 We are working towards a Modular Framework. So if you need just the controllers and models with no views , you just need to mention it at the right place and it will be taken care of .Like this every bit of this framework is dreamed to modular and performant :)
 
+
+
 Our Targets: 
 
 Create CLI/GUI for the for the following

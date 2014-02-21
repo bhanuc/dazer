@@ -1,7 +1,10 @@
+/*jslint node:true*/
+'use strict';
 
 /**
  * Module dependencies.
  */
+
 //load koa
 var koa = require('koa');
 var router = require('koa-router');

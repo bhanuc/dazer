@@ -1,34 +1,37 @@
-var passport = require('koa-passport')
+/*jslint node:true*/
+'use strict';
 
-var user = { id: 1, username: 'test' }
+var passport = require('koa-passport');
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id)
-})
+var user = { id: 1, username: 'test' };
 
-passport.deserializeUser(function(id, done) {
-  done(null, user)
-})
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
 
-var LocalStrategy = require('passport-local').Strategy
-passport.use(new LocalStrategy(function(username, password, done) {
+passport.deserializeUser(function (id, done) {
+    done(null, user);
+});
+
+var LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(function (username, password, done) {
   // retrieve user ...
-  if (username === 'test' && password === 'test') {
-    done(null, user)
-  } else {
-    done(null, false)
-  }
-}))
+    if (username === 'test' && password === 'test') {
+        done(null, user);
+    } else {
+        done(null, false);
+    }
+}));
 
-var FacebookStrategy = require('passport-facebook').Strategy
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new FacebookStrategy({
     clientID: 'your-client-id',
     clientSecret: 'your-secret',
     callbackURL: 'http://localhost:' + (process.env.PORT || 3000) + '/auth/facebook/callback'
-  },
-  function(token, tokenSecret, profile, done) {
+},
+    function (token, tokenSecret, profile, done) {
     // retrieve user ...
-    done(null, user)
-  }
-))
+        done(null, user);
+    }
+    ));
