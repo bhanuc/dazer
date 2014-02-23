@@ -4,19 +4,18 @@
   "version": "0.0.1",
   "dependencies": {
     "koa": "~0.2.0",
-    "koa-mount": "*",
+    "koa-mount": "~1.2.3",
     "co-views": "~0.1.0",
     "ejs": "~0.8.5",
     "koa-logger": "~1.1.0",
-    "koa-router": "*",
-    "koa-mount": "*",
-    "koa-session": "*",
-    "koa-passport": "*",
-    "koa-jsonp": "*",
+    "koa-router": "~3.0.0",
+    "koa-session": "~1.2.1",
+    "koa-passport": "~0.1.0",
+    "koa-jsonp": "~0.0.3",
     "mongoose": "*",
     "passport-local": "*",
     "passport-facebook": "*",
-    "koa-formidable": "*"
+    "koa-formidable": "~0.1.0"
   },
   "devDependencies": {
     "co": "*",

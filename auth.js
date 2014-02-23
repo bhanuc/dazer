@@ -3,25 +3,31 @@
 
 var passport = require('koa-passport');
 
-var user = { id: 1, username: 'test' };
+var User = require('./model/user');
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-    done(null, user);
+    User.findById(id, function (err, user) {
+    done(err, user);
+  });
 });
 
 var LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(function (username, password, done) {
   // retrieve user ...
-    if (username === 'test' && password === 'test') {
-        done(null, user);
-    } else {
-        done(null, false);
-    }
-}));
+    User
+    .findOne({ username : username, password: password })
+    .exec(function (err, user) {
+      if (err) return done(err)
+      if (!user){
+          return done(null, false);
+                } else {
+                    done(null, user);
+                }
+})}));
 
 var FacebookStrategy = require('passport-facebook').Strategy;
 
