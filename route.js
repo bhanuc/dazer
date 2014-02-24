@@ -11,11 +11,11 @@ var parse = require('co-body');
 var app = module.exports = koa();
 
 // authentication
-require('./auth');
+/**require('./auth');
 var passport = require('koa-passport');
 app.use(passport.initialize());
 app.use(passport.session());
-
+**/
 //use the router
 var Router = require('koa-router');
 
@@ -23,9 +23,9 @@ var default_router = new Router();
 
 default_router.get('/', function *() {
  // this.body = "here comes the login or home page"
-      this.body = yield "1hello";
+      this.body =  "1hello";
 });
-
+/**
 var formidable = require('koa-formidable');
 
 // POST /login
@@ -56,10 +56,6 @@ app.use(function*(next) {
 
   yield next
 });
-
-app.use(default_router.middleware());
-
-// Require authentication for now
 app.use(function*(next) {
   if (this.req.isAuthenticated()) {
     yield next
@@ -67,11 +63,9 @@ app.use(function*(next) {
     this.redirect('/')
   }
 });
+**/
+app.use(default_router.middleware());
+
+// Require authentication for now
 
 
-
-app.use(router(app));
-
-app.use(function *(){
-    var body = yield "hello";
-});
