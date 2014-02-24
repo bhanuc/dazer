@@ -23,7 +23,7 @@ var default_router = new Router();
 
 default_router.get('/', function *() {
  // this.body = "here comes the login or home page"
-      this.body = "hello";
+      this.body = yield "1hello";
 });
 
 var formidable = require('koa-formidable');
