@@ -12,10 +12,10 @@
     "koa-session": "~1.2.1",
     "koa-passport": "~0.1.0",
     "koa-jsonp": "~0.0.3",
-    "mongoose": "*",
+    "mongoose": "3.8.8",
     "passport-local": "*",
     "passport-facebook": "*",
-    "koa-formidable": "~0.1.0"
+    "co-body": "0.0.2"
   },
   "devDependencies": {
     "co": "*",

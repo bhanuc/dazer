@@ -1,11 +1,11 @@
 /*jslint node:true*/
 'use strict';
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     crypto = require('crypto'),
     oAuthTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'];
-
+console.log("1");
 
 var User_schema = new Schema({
     fname : { type: String, default: ''},
@@ -26,8 +26,7 @@ var User = mongoose.model('User');
 
 //Example of a virtual Schema
 
-User_schema
-    .virtual('password')
+var virtual_password = User_schema.virtual('password')
     .set(function (password) {
         this._password = password;
         this.salt = this.makesalt();
@@ -36,7 +35,7 @@ User_schema
     .get(function() { return this._password; });
 
 //custom Validations
-
+/**
 var validater = function (value) {
     return value && value.length;
 };
@@ -44,7 +43,7 @@ var validater = function (value) {
 //local validations
 // the below 5 validations only apply if you are signing up traditionally
 
-User_Schema.path('name').validate(function (name) {
+var validation1 = User_Schema.path('name').validate(function (name) {
   if (this.doesNotRequireValidation()) return true
   return name.length
 }, 'Name cannot be blank')
@@ -66,7 +65,7 @@ User_Schema.path('email').validate(function (email, fn) {
   } else fn(true)
 }, 'Email already exists')
 
-User_Schema.path('username').validate(function (username) {
+var validation = User_Schema.path('username').validate(function (username) {
   if (this.doesNotRequireValidation()) return true
   return username.length
 }, 'Username cannot be blank')
@@ -75,7 +74,7 @@ User_Schema.path('hashed_password').validate(function (hashed_password) {
   if (this.doesNotRequireValidation()) return true
   return hashed_password.length
 }, 'Password cannot be blank')
-
+**/
 //pre save hooks
 
 User_schema.pre('save', function (next) {
