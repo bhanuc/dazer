@@ -15,7 +15,8 @@
     "mongoose": "3.8.8",
     "passport-local": "*",
     "passport-facebook": "*",
-    "co-body": "0.0.2"
+    "co-body": "0.0.2",
+    "koa-static": "*"
   },
   "devDependencies": {
     "co": "*",

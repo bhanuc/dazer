@@ -8,6 +8,7 @@
 var koa = require('koa');
 var router = require('koa-router');
 var parse = require('co-body');
+var public_dir = require('koa-static');
 var app = module.exports = koa();
 
 // authentication
@@ -17,6 +18,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 **/
 //use the router
+
+
+app.use(public_dir(__dirname + "/public"));
 var Router = require('koa-router');
 
 var default_router = new Router();
