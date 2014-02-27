@@ -5,7 +5,9 @@
 	<link rel="stylesheet" type="text/css" href="menu.css">
 	<link rel="stylesheet" type="text/css" href="button.css">
 	<link rel="stylesheet" type="text/css" href="semantic.css">
-	
+	<script type="application/javascript">
+  
+    </script>
 	
 </head>
 <body>
@@ -34,13 +36,13 @@
     </div>
   </div>
 </div>
-<div class="ui two column middle aligned relaxed grid basic segment">
+<form class="ui two column middle aligned relaxed grid basic segment" action="/login" method="post">
   <div class="column">
     <div class="ui form segment">
       <div class="field">
         <label>Username</label>
         <div class="ui left labeled icon input">
-          <input type="text" placeholder="Username">
+          <input type="text" placeholder="Username" name="username">
           <i class="user icon"></i>
           <div class="ui corner label">
             <i class="asterisk icon"></i>
@@ -50,14 +52,14 @@
       <div class="field">
         <label>Password</label>
         <div class="ui left labeled icon input">
-          <input type="password" placeholder="Password">
+          <input type="password" placeholder="Password" name="password">
           <i class="lock icon"></i>
           <div class="ui corner label">
             <i class="asterisk icon"></i>
           </div>
         </div>
       </div>
-      <div class="ui blue submit button">Login</div>
+      <button class="ui blue submit button" type="submit">Login</button>
     </div>
   </div>
   <div class="ui vertical divider">
@@ -73,6 +75,6 @@
     </div>
 </a>
   </div>
-</div>
+</form>//
 
 </body>

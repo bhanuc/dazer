@@ -3,7 +3,7 @@
 
 var passport = require('koa-passport');
 
-var User = require('./model/user');
+var User = require('./model/user').User;
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);

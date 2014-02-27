@@ -65,8 +65,7 @@ if(config.controller.need){
  //    activate the controllers
 };
 
-if(config.model.need){
-};
+
 
 if(config.policy.need){
     //activate the models
