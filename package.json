@@ -2,6 +2,7 @@
   "name": "Dazer",
   "description": "'Cause we believe a MVC can be more personal",
   "version": "0.0.1",
+  "main": "lib/dazer.js",
   "dependencies": {
     "koa": "~0.2.0",
     "koa-mount": "~1.2.3",
@@ -17,6 +18,9 @@
     "passport-facebook": "*",
     "co-body": "0.0.2",
     "koa-static": "*"
+  },
+    "scripts": {
+    "test": "make test"
   },
   "devDependencies": {
     "co": "*",

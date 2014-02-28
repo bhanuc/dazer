@@ -1,0 +1,17 @@
+{
+  "name": "Dazer",
+  "description": "Command-line ",
+  "version": "0.0.1",
+  "dependencies": {
+   "commander": "2.1.0"
+  },
+  "devDependencies": {
+    "co": "*",
+    "should": "*",
+    "supertest": "*"
+  },
+  "engines": {
+    "node": ">= 11.3"
+  },
+  "license": "MIT"
+}
