@@ -11,6 +11,18 @@ var parse = require('co-body');
 var public_dir = require('koa-static');
 var app = module.exports = koa();
 
+var views = require('co-views');
+var config = require('./config/app');
+
+
+if (config.view.need) {
+  //activate the views
+    var render = views(__dirname + '/' + config.view.folder_name, { ext: config.view.engine
+                                                                  });
+    console.log(config.view.folder_name);
+};
+
+
 // authentication
 require('./auth');
 var passport = require('koa-passport');
@@ -27,7 +39,8 @@ var default_router = new Router();
 
 default_router.get('/', function *() {
  // this.body = "here comes the login or home page"
-      this.body =  "unauthenticated";
+    this.body = yield render('login.ejs');
+    //  this.body =  "unauthenticated";
 });
 
 var formidable = require('koa-formidable');
@@ -55,21 +68,26 @@ default_router.get('/auth/facebook/callback',
   })
 );
 
-app.use(function*(next) {
+/**app.use(function*(next) {
   this.req.query = this.query;
 
   yield next
-});
-/**app.use(function*(next) {
+}); **/
+app.use(default_router.middleware());
+
+app.use(function* (next) {
   if (this.req.isAuthenticated()) {
-    yield next
+    yield render('home');
   } else {
     this.redirect('/')
   }
-}); **/
+});
 
-app.use(default_router.middleware());
+var secured = new Router();
 
-// Require authentication for now
+secured.get('/app', function* (){
+    this.body = yield render('home');
+})
 
 
+app.use(secured.middleware())

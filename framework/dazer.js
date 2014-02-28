@@ -7,7 +7,7 @@ var session = require('koa-session');
 var config = require('./config/app');
 
 //load coviews module forloading templates
-var views = require('./views/index');
+//var views = require('./views/index');
 
 //load route module for loading routes
 var route = require('./route.js');
@@ -49,7 +49,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 
 //load the views
-app.use(mount(views));
+//app.use(mount(views));
 
 
 

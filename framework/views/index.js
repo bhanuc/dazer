@@ -11,5 +11,5 @@ var app = module.exports = koa();
 
 if(config.view.need){
   //activate the views
-    var render = views(__dirname + '/'+config.view.folder_name, { ext: config.view.engine });
+    var render = module.exports.render = views(__dirname + '/'+config.view.folder_name, { default: config.view.engine });
 };
