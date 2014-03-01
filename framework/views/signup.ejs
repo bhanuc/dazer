@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<title>
+</title>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link rel="stylesheet" type="text/css" href="css/button.css">
+	<link rel="stylesheet" type="text/css" href="css/semantic.css">
+	<link rel="stylesheet" type="text/css" href="css/form.css">
+</head>
+<body>
+<div class="ui inverted menu">
+  <a class="active item">
+     Home
+  </a>
+  <a class="item">
+     Projects
+  </a>
+  <a class="item">
+     Support
+  </a>
+  <a class="item">
+     Downloads
+  </a>
+  <a class="item" href="choice.html">
+     Login/SignUp
+  </a>
+  <div class="right menu">
+    <div class="item">
+      <div class="ui icon input">
+        <input type="text" placeholder="Search...">
+        <i class="search link icon"></i>
+      </div>
+    </div>
+  </div>
+</div>
+<form align="center" action="/signup" method="post" enctype="multipart/form-data" class="ui two column middle aligned relaxed grid basic segment ui form segment" >
+   <div>
+        <label for="name">First Name:</label>
+        <input type="text" id="fname" name="fname">
+    </div>
+       <div>
+        <label for="name">Lst Name:</label>
+        <input type="text" id="lname" name="lname">
+    </div>
+    <div>
+        <label for="mail">E-mail:</label>
+        <input type="email" id="mail" name="email">
+    </div>
+    <div>
+        <label for="Username">Username:</label>
+        <input type="text" id="username" name="username">
+    </div>
+      <div>
+        <label for="Username">Password:</label>
+        <input type="password" id="username" name="password">
+    </div>
+    
+    <div class="button">
+        <button type="submit">Submit</button>
+    </div>
+</form> 
+</body>

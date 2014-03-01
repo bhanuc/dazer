@@ -14,6 +14,7 @@ var app = module.exports = koa();
 var views = require('co-views');
 var config = require('./config/app');
 
+var User = require('./model/user').User;
 
 if (config.view.need) {
   //activate the views
@@ -43,7 +44,9 @@ default_router.get('/', function *() {
     //  this.body =  "unauthenticated";
 });
 
-var formidable = require('koa-formidable');
+default_router.get('/login', function *() {
+    this.body = yield render('login.ejs');
+});
 
 // POST /login
 default_router.post('/login',
@@ -54,19 +57,54 @@ default_router.post('/login',
   })
 );
 
+
+default_router.get('/signup', function *() {
+    this.body = yield render('signup.ejs');
+});
+
+var formidable = require('koa-formidable');
+
+
+default_router.post('/signup', function* (next) {
+  var form = yield formidable.parse(this);
+    var that = this;
+  //form.fields && form.files
+     User
+    .findOne({ email : form.fields.email })
+    .exec(function (err, user) {
+    //  if (err) that.body = "some strange error"
+      if (!user){
+          var user = new User({email: form.fields.email, fname: form.fields.fname, lname: form.fields.lname, password: form.fields.password });
+          user.save(function (err) {
+            if(err){ 
+                console.log("cannot save the user");
+                //that.body = "cannot save the user";
+            }
+              else  { this.body = yield "Registration sucessful";
+                     console.log("registration sucessful");
+                    }
+          });
+                } else {
+                     console.log("email already registered");
+                   //that.body = "This email is already registered";
+                }
+})});
+
+
+
 default_router.get('/logout', function*(next) {
   this.req.logout();
   this.redirect('/');
 });
 
-default_router.get('/auth/facebook', passport.authenticate('facebook'));
+/**default_router.get('/auth/facebook', passport.authenticate('facebook'));
 
 default_router.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
     successRedirect: '/app',
     failureRedirect: '/'
   })
-);
+);**/
 
 /**app.use(function*(next) {
   this.req.query = this.query;
