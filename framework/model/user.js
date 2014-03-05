@@ -1,6 +1,7 @@
 /*jslint node:true*/
 'use strict';
 var mongoose = require('mongoose');
+var crypto = require('crypto');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     crypto = require('crypto'),
@@ -11,7 +12,7 @@ var User_schema = new Schema({
     fname : { type: String, default: ''},
     lname : { type: String, default: ''},
     email : { type: String, default: ''},
-    password : { type : String, default: ''},
+    hash : { type : String, default: ''},
     salt: { type : String, default: ''},
      authToken: { type: String, default: '' },
     facebook: {},
