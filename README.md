@@ -1,7 +1,7 @@
 dazer
 =====
 
-Super-Configurable Node.js/Koa.js based Modular MVC Famework.
+Super-Configurable Node.js/Koa.js based Modular MVC Famework(currently in pre-alpha phase).
 
 Currently this is just a koa.js project template but we will build everything around this template .
 
@@ -29,6 +29,6 @@ Create CLI/GUI for the for the following
 
     Create & Manage new app, model, controller, view 
 
-    Create & Manage User Management system with build-in authentication
+    Create & Manage User Management system with build-in authentication ( In process)
 
-    and Much More comng very soon
+    and Much More coming very soon
