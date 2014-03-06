@@ -13,25 +13,25 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (id, done) {
     console.log("deserializer ran");
     User.findById(id, function (err, user) {
-    done(err, user);
-  });
+        done(err, user);
+    });
 });
 
 var LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(function (email, password, done) {
-  console.log(email+password);
     User
-    .findOne({ email : email, password: password })
-    .exec(function (err, user) {
-      if (err)   console.log("error") ; return done(err)  ;
-      if (!user){
-           console.log("user not found");
-          return done(null, false);
-                } else {
-                    done(null, user); 
-                    console.log(user);
-                }
-})}));
+        .findOne({ email : email, password: password })
+        .exec(function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (!user) {
+                return done(null, false);
+            } else {
+                done(null, user);
+            }
+        });
+}));
 
 /**var FacebookStrategy = require('passport-facebook').Strategy;
 

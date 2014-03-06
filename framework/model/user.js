@@ -13,7 +13,7 @@ var User_schema = new Schema({
     email : { type: String, default: ''},
     password : { type : String, default: ''},
     salt: { type : String, default: ''},
-     authToken: { type: String, default: '' },
+    authToken: { type: String, default: '' },
     facebook: {},
     twitter: {},
     github: {},
@@ -28,8 +28,8 @@ var User = mongoose.model('User');
 
 User_schema.pre('save', function (next) {
   //some pre hooks
-        next() ;
-             });
+    next();
+});
 
 
 exports.User = User;

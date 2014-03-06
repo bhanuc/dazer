@@ -21,8 +21,7 @@ if (config.view.need) {
     var render = views(__dirname + '/' + config.view.folder_name, { ext: config.view.engine
                                                                   });
     console.log(config.view.folder_name);
-};
-
+}
 
 // authentication
 require('./auth');
