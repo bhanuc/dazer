@@ -61,17 +61,17 @@ app.use(logger());
 
 app.use(jsonp());
 
-if(config.controller.need){
+if (config.controller.need) {
  //    activate the controllers
-};
+}
 
 
 
-if(config.policy.need){
+if (config.policy.need) {
     //activate the models
-};
+}
 
 if (!module.parent) {
-        app.listen(3000);
-        console.log("dazer is up and running")
+    app.listen(3000);
+    console.log("dazer is up and running");
 }
