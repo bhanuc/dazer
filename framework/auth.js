@@ -5,8 +5,8 @@ var passport = require('koa-passport');
 var crypto = require('crypto');
 var User = require('./model/user').User;
 
+
 User.prototype.generateHash = function (password, cb) {
-    console.log(cb);
     if (!password) {
         return cb('');
     }
@@ -23,7 +23,21 @@ User.prototype.generateHash = function (password, cb) {
 
 
 
-    // =========================================================================
+
+var authenticator = function (user_pass, supplied_pass, salt, cb) {
+    if (!supplied_pass) {
+        return cb(new Error("No password was supplied"));
+    } else {
+        if (crypto.createHmac('sha1', salt).update(supplied_pass).digest('hex') == user_pass) {
+            return cb(null, true);
+        } else {
+            return cb(null, false);
+        }
+    }
+    
+};
+
+  // =========================================================================
     // passport session setup ==================================================
     // =========================================================================
     // required for persistent login sessions
@@ -55,7 +69,7 @@ passport.use('local-signin', new LocalStrategy({
             if (!user) {
                 return done(err);
             }
-            user.verifyPassword(user.local.hash, password, function verifyPassword(err, valid) {
+            authenticator(user.hash, password, user.salt, function verifyPassword(err, valid) {
                 if (err) {
                     return done(err);
                 }
@@ -118,7 +132,8 @@ passport.use('local-signup', new LocalStrategy({
     }
     ));
 
-                    
+
+
 
 /**var FacebookStrategy = require('passport-facebook').Strategy;
 

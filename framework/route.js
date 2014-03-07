@@ -60,11 +60,11 @@ default_router.get('/login', function *() {
 //handle login request from the form
 //=======================================
 
-default_router.post('/signin',
+default_router.post('/login',
   parser,
   passport.authenticate('local-signin', {
-    successRedirect: '/account',
-    failureRedirect: '/signin'
+    successRedirect: '/app',
+    failureRedirect: '/login'
   })
 );
 
@@ -76,7 +76,7 @@ default_router.post('/signin',
 //=======================================
 
 default_router.get('/signup', function *() {
-    this.body = yield render('signup.ejs');
+    this.body = yield render('signup');
 });
 
 
