@@ -132,7 +132,8 @@ app.use(function* (next) {
 var secured = new Router();
 
 secured.get('/app', function* (){
-    this.body = yield render('view');
+    var userdetails = this.req.user;
+    this.body = yield render('view.ejs',{ user : userdetails});
 })
 
 

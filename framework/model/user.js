@@ -6,7 +6,6 @@ var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     crypto = require('crypto'),
     oAuthTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'];
-console.log("1");
 
 var User_schema = new Schema({
     fname : { type: String, default: ''},
