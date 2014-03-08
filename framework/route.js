@@ -14,7 +14,7 @@ var config = require('./config/app');
 var User = require('./model/user').User;
 var formidable = require('koa-formidable');
 
-var parser = function *parser(next) {
+var parser = function *parser( next) {
   this.req.body = yield parse(this);
   yield next;
 }
@@ -68,6 +68,22 @@ default_router.post('/login',
   })
 );
 
+//=============================================
+// route for facebook authentication and login
+//=============================================
+	
+default_router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+//=============================profile=================================
+// handle the callback after facebook has authenticated the user
+//==============================================================
+http://api.shephertz.com/
+    default_router.get('/auth/facebook/callback', 
+		passport.authenticate('facebook', {
+		    successRedirect : '/app',
+			failureRedirect : '/'
+		}));
+
 
 
 
@@ -101,15 +117,6 @@ default_router.get('/logout', function*(next) {
   this.req.logout();
   this.redirect('/');
 });
-
-/**default_router.get('/auth/facebook', passport.authenticate('facebook'));
-
-default_router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', {
-    successRedirect: '/app',
-    failureRedirect: '/'
-  })
-);**/
 
 /**app.use(function*(next) {
   this.req.query = this.query;
