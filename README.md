@@ -29,6 +29,6 @@ Create CLI/GUI for the for the following
 
     Create & Manage new app, model, controller, view 
 
-    Create & Manage User Management system with build-in authentication
+    Create & Manage User Management system with build-in authentication [almost done]
 
     and Much More comng very soon
