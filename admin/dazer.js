@@ -2,11 +2,11 @@
 'use strict';
 
 
-//load coviews module forloading templates
-var views = require('./views/index');
+var views = require('co-views');
 
-//load route module for loading routes
-var route = require('./route.js');
+var render = views(__dirname + '/' + 'views' , { ext: 'ejs' });
+
+
 
 //load logger module for loading logger
 var logger = require('koa-logger');
@@ -26,7 +26,6 @@ app.use(mount(views));
 
 
 
-app.use(mount(route));
 
 // Initiate logger
 
@@ -34,9 +33,11 @@ app.use(logger());
 
 app.use(jsonp());
 
-if(config.policy.need){
-    //activate the models
-};
+app.use(function *(next) {
+  this.body = yield render('main.ejs');
+});
+
+
 
 if (!module.parent) {
         app.listen(4000);
