@@ -31,6 +31,6 @@ items.forEach(function (item) {
 
 app.use(myrouter.middleware());
 if (!module.parent) {
-        app.listen(4000);
-        console.log("dazer admin is up and running")
+    app.listen(4000);
+    console.log("dazer admin is up and running");
 }
