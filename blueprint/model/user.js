@@ -1,10 +1,8 @@
 /*jslint node:true*/
 'use strict';
 var mongoose = require('mongoose');
-var crypto = require('crypto');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
-    crypto = require('crypto'),
     oAuthTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'];
 
 var User_schema = new Schema({
