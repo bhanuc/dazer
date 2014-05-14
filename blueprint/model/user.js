@@ -12,12 +12,7 @@ var User_schema = new Schema({
     hash : { type : String, default: ''},
     salt: { type : String, default: ''},
     authToken: { type: String, default: '' },
-    facebook: {
-        id           : String,
-        token        : String,
-        email        : String,
-        name         : String
-    },
+    facebook: {},
     twitter: {},
     github: {},
     google: {},

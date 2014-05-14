@@ -1,7 +1,7 @@
 dazer
 =====
 
-Super-Configurable Node.js/Koa.js based Modular MVC Famework.
+Super-Configurable Node.js/Koa.js based Modular MVC Famework(currently in pre-alpha phase).
 
 Currently this is just a koa.js project template but we will build everything around this template .
 
@@ -35,3 +35,4 @@ Create CLI/GUI for the for the following
     
 
 Author: Bhanu Pratap Chaudhary
+=======
