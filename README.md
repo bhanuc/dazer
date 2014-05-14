@@ -23,6 +23,7 @@ We are working towards a Modular Framework. So if you need just the controllers 
 
 # Any Kind of help would be welcomed . Just Fork and create a pull request . 
 
+#Understanding the Project. We are creating 2 automated ways to create an application. First is to create full application using GUI and another using commandline. The GUI part will even write routes for you so you no longer need to write server side code anytime soon.
 Our Targets: 
 
 Create CLI/GUI for the for the following
