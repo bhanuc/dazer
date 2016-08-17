@@ -1,19 +1,19 @@
-dazer
+Dazer
 =====
 
-A Node.js/Koa.js based MVC Hackathon Starter (currently in pre-alpha phase).
+A Koa.js based MVC Hackathon Starter (currently in alpha phase).
 
-This project requires node 0.11 or greater (Better install the latest node version) 
+This project requires latest node.js to work. Install 4.x or above. 
 
 To Use: 
 
-Please Note that this is an early alpha project but if you still want to use it then -->
+Please Note that this is an alpha project but if you still want to use it then -->
 
     git clone https://github.com/bhanuc/dazer
 
     npm install
     
-    node --harmony-generators 
+    node index.js
     
     
 

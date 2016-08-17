@@ -61,5 +61,5 @@ app.use(logger());
 
 if (!module.parent) {
     app.listen(3000);
-    console.log("dazer is up and running on ",'http://localhost:3000');
+    console.log(config.appname+" is up and running on ",'http://localhost:3000');
 }

@@ -1,4 +1,5 @@
 module.exports = {
+"appname": "Dazer",
 "model" :   {   
                 "need": true,
                 "folder_name": "model",

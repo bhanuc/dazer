@@ -44,7 +44,7 @@ var default_router = new Router();
 //=======================================
 
 default_router.get('/', function *() {
-    this.body = yield render('home.ejs');
+    this.body = yield render('home.ejs',{ appname : config.appname});
 });
 
 //=======================================
@@ -52,7 +52,7 @@ default_router.get('/', function *() {
 //=======================================
 
 default_router.get('/login', function *() {
-    this.body = yield render('login.ejs');
+    this.body = yield render('login.ejs',{ appname : config.appname});
 });
 
 //=======================================
@@ -76,7 +76,7 @@ default_router.get('/auth/facebook', passport.authenticate('facebook', { scope :
 //=============================profile=================================
 // handle the callback after facebook has authenticated the user
 //==============================================================
-http://api.shephertz.com/
+
     default_router.get('/auth/facebook/callback', 
 		passport.authenticate('facebook', {
 		    successRedirect : '/app',
