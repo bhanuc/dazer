@@ -139,12 +139,13 @@ passport.use('local-signup', new LocalStrategy({
 
 
 var FacebookStrategy = require('passport-facebook').Strategy;
-var authconfig = require('./config/3rdparty_auth.js');
+var authconfig = require('./config/oauth.js').facebookAuth;
 
 passport.use(new FacebookStrategy({
-        clientID: authconfig.facebookAuth.clientID,
-        clientSecret: authconfig.facebookAuth.clientSecret,
-        callbackURL: authconfig.facebookAuth.callbackURL
+        clientID: authconfig.clientID,
+        clientSecret: authconfig.clientSecret,
+        callbackURL: authconfig.callbackURL,
+        profileFields: ['id', 'displayName', 'email']
     },
 
     // facebook will send back the token and profile
@@ -157,7 +158,6 @@ passport.use(new FacebookStrategy({
             User.findOne({
                 'facebook.id': profile.id
             }, function(err, user) {
-
                 // if there is an error, stop everything and return that
                 // ie an error connecting to the database
                 if (err)
@@ -169,13 +169,15 @@ passport.use(new FacebookStrategy({
                 } else {
                     // if there is no user found with that facebook id, create them
                     var newUser = new User();
-
+                    newUser.facebook = {}
                     // set all of the facebook information in our user model
                     newUser.facebook.id = profile.id; // set the users facebook id	                
                     newUser.facebook.token = token; // we will save the token that facebook provides to the user	                
                     newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
                     newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
-
+                    newUser.name = profile.displayName;
+                    newUser.email = profile.emails[0].value;
+                    newUser.markModified('facebook');
                     // save our user to the database
                     newUser.save(function(err) {
                         if (err)

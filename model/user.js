@@ -26,11 +26,7 @@ var User_schema = new Schema({
         type: String,
         default: ''
     },
-    facebook: {},
-    twitter: {},
-    github: {},
-    google: {},
-    linkedin: {}
+    facebook: Schema.Types.Mixed
 });
 
 mongoose.model('User', User_schema);

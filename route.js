@@ -26,11 +26,14 @@ var render = views(__dirname + '/' + config.view.folder_name, {
 
 
 
-// authentication
+// authentication and session
 require('./auth');
 var passport = require('koa-passport');
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+require('koa-csrf')(app)
 
 //use the router
 
@@ -56,7 +59,7 @@ default_router.get('/', function * () {
 
 default_router.get('/login', function * () {
     this.body = yield render('login.ejs', {
-        appname: config.appname
+        appname: config.appname, csrf: this.csrf
     });
 });
 
@@ -99,7 +102,7 @@ default_router.get('/auth/facebook/callback',
 
 default_router.get('/signup', function * () {
     this.body = yield render('signup', {
-        appname: config.appname
+        appname: config.appname, csrf: this.csrf
     });
 });
 

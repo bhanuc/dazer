@@ -12,7 +12,9 @@
   <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
     <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
       <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title"><%=appname%></span>
+        <a href="/"><span class="mdl-layout-title"><button class="mdl-button mdl-js-button">
+          <%=appname%>
+        </button></span></a>
       </div>
     </header>
     <div class="demo-ribbon"></div>
@@ -31,12 +33,12 @@
               <input class="mdl-textfield__input" type="password" name="password" id="password">
               <label class="mdl-textfield__label" for="password">Password</label>
             </div>
+            <input class="mdl-textfield__input" type="hidden" name="_csrf" value="<%=csrf%>">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit">
             Login
-            </button>
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit">
-            Login Using Facebook
-            </button>
+            </button> <a href="/auth/facebook" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">              
+              Login Using Facebook
+            </a>
           </form></div>
           <div class="mdl-cell mdl-cell--6-col"><br>or create a new <%=appname%> account<br><br><a href="/signup">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit">
