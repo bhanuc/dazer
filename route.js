@@ -13,16 +13,17 @@ var config = require('./config/app');
 var User = require('./model/user').User;
 var formidable = require('koa-formidable');
 
-var parser = function *parser( next) {
-  this.req.body = yield parse(this);
-  yield next;
+var parser = function * parser(next) {
+    this.req.body = yield parse(this);
+    yield next;
 }
 
-//if (config.view.need) {
-  //activate the views
-var render = views(__dirname + '/' + config.view.folder_name, { ext: config.view.engine });
 
-//};
+var render = views(__dirname + '/' + config.view.folder_name, {
+    ext: config.view.engine
+});
+
+
 
 
 // authentication
@@ -43,16 +44,20 @@ var default_router = new Router();
 //HOME PAGE (containing loging links)
 //=======================================
 
-default_router.get('/', function *() {
-    this.body = yield render('home.ejs',{ appname : config.appname});
+default_router.get('/', function * () {
+    this.body = yield render('home.ejs', {
+        appname: config.appname
+    });
 });
 
 //=======================================
 //Login PAGE 
 //=======================================
 
-default_router.get('/login', function *() {
-    this.body = yield render('login.ejs',{ appname : config.appname});
+default_router.get('/login', function * () {
+    this.body = yield render('login.ejs', {
+        appname: config.appname
+    });
 });
 
 //=======================================
@@ -60,28 +65,30 @@ default_router.get('/login', function *() {
 //=======================================
 
 default_router.post('/login',
-  parser,
-  passport.authenticate('local-signin', {
-    successRedirect: '/app',
-    failureRedirect: '/login'
-  })
+    parser,
+    passport.authenticate('local-signin', {
+        successRedirect: '/app',
+        failureRedirect: '/login'
+    })
 );
 
 //=============================================
 // route for facebook authentication and login
 //=============================================
-	
-default_router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+default_router.get('/auth/facebook', passport.authenticate('facebook', {
+    scope: 'email'
+}));
 
 //=============================profile=================================
 // handle the callback after facebook has authenticated the user
 //==============================================================
 
-    default_router.get('/auth/facebook/callback', 
-		passport.authenticate('facebook', {
-		    successRedirect : '/app',
-			failureRedirect : '/'
-		}));
+default_router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', {
+        successRedirect: '/app',
+        failureRedirect: '/'
+    }));
 
 
 
@@ -90,8 +97,10 @@ default_router.get('/auth/facebook', passport.authenticate('facebook', { scope :
 //Render sign up page
 //=======================================
 
-default_router.get('/signup', function *() {
-    this.body = yield render('signup',{ appname : config.appname});
+default_router.get('/signup', function * () {
+    this.body = yield render('signup', {
+        appname: config.appname
+    });
 });
 
 
@@ -99,22 +108,22 @@ default_router.get('/signup', function *() {
 //Handle sign-up post request from the form
 //=======================================// POST /signup
 default_router.post('/signup',
-  parser,
-  passport.authenticate('local-signup', {
-    successRedirect: '/app',
-    failureRedirect: '/signup'
-  })
+    parser,
+    passport.authenticate('local-signup', {
+        successRedirect: '/app',
+        failureRedirect: '/signup'
+    })
 );
 
 
 
-	// =====================================
-	// LOGOUT ==============================
-	// =====================================
+// =====================================
+// LOGOUT ==============================
+// =====================================
 
-default_router.get('/logout', function*(next) {
-  this.req.logout();
-  this.redirect('/');
+default_router.get('/logout', function * (next) {
+    this.req.logout();
+    this.redirect('/');
 });
 
 /**app.use(function*(next) {
@@ -124,22 +133,25 @@ default_router.get('/logout', function*(next) {
 }); **/
 app.use(default_router.middleware());
 
-	// =====================================
-	// check the login ==============================
-	// =====================================
-app.use(function* (next) {
-  if (this.req.isAuthenticated()) {
-    yield next;
-  } else {
-    this.redirect('/login')
-  }
+// =====================================
+// check the login ==============================
+// =====================================
+app.use(function * (next) {
+    if (this.req.isAuthenticated()) {
+        yield next;
+    } else {
+        this.redirect('/login')
+    }
 });
 
 var secured = new Router();
 
-secured.get('/app', function* (){
+secured.get('/app', function * () {
     var userdetails = this.req.user;
-    this.body = yield render('view.ejs',{ user : userdetails,  appname : config.appname});
+    this.body = yield render('view.ejs', {
+        user: userdetails,
+        appname: config.appname
+    });
 })
 
 
