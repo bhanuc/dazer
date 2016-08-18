@@ -1,62 +1,66 @@
 <!DOCTYPE html>
-<title>
+<title>Signup
 </title>
 <head>
-	<link rel="stylesheet" type="text/css" href="css/menu.css">
-	<link rel="stylesheet" type="text/css" href="css/button.css">
-	<link rel="stylesheet" type="text/css" href="css/semantic.css">
-	<link rel="stylesheet" type="text/css" href="css/form.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.indigo-pink.min.css">
+<link rel="stylesheet" href="/css/other.css">
+<script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
+  
 </head>
 <body>
-<div class="ui inverted menu">
-  <a class="active item">
-     Home
-  </a>
-  <a class="item">
-     Projects
-  </a>
-  <a class="item">
-     Support
-  </a>
-  <a class="item">
-     Downloads
-  </a>
-  <a class="item" href="choice.html">
-     Login/SignUp
-  </a>
-  <div class="right menu">
-    <div class="item">
-      <div class="ui icon input">
-        <input type="text" placeholder="Search...">
-        <i class="search link icon"></i>
-      </div>
-    </div>
+ <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
+      <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title"><%=appname%></span>
+        </div>
+      </header>
+      <div class="demo-ribbon"></div>
+      <main class="demo-main mdl-layout__content">
+        <div class="demo-container mdl-grid">
+          <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+          <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+            <h3>Enter your details below</h3>
+            <div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col"> <form  action="/signup" method="post" enctype="application/x-www-form-urlencoded" method="post">
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text"  name="name" id="name">
+    <label class="mdl-textfield__label" for="name">Full Name</label>
   </div>
+   <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text"  name="email" id="email">
+    <label class="mdl-textfield__label" for="email">Email Address</label>
+  </div>
+   <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="password" name="password" id="password">
+    <label class="mdl-textfield__label" for="password">Password</label>
+  </div>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit">
+  Signup
+</button> 
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit">
+  Signup Using Facebook
+</button>
+</form></div>
+  <div class="mdl-cell mdl-cell--6-col"><br><br>or Login to your <%=appname%> account <br><br><a href="/login">
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit">
+  Login
+</button>
+</a></div>
 </div>
-<form align="center" action="/signup" method="post" enctype="application/x-www-form-urlencoded" class="inverted segment ui form segment" >
-   <div>
-        <label for="name">First Name:</label>
-        <input type="text" id="fname" name="fname">
+             
+          </div>
+        </div>
+        <footer class="demo-footer mdl-mini-footer">
+          <div class="mdl-mini-footer--left-section">
+            <ul class="mdl-mini-footer--link-list">
+              <li><a href="#">Help</a></li>
+              <li><a href="#">Privacy and Terms</a></li>
+              <li><a href="#">User Agreement</a></li>
+            </ul>
+          </div>
+        </footer>
+      </main>
     </div>
-       <div>
-        <label for="name">Last Name:</label>
-        <input type="text" id="lname" name="lname">
-    </div>
-    <div>
-        <label for="mail">E-mail:</label>
-        <input type="email" id="mail" name="email">
-    </div>
-    <div>
-        <label for="Username">Username:</label>
-        <input type="text" id="username" name="username">
-    </div>
-      <div>
-        <label for="Username">Password:</label>
-        <input type="password" id="username" name="password">
-    </div>
-    
-    <div class="button">
-        <button type="submit">Submit</button>
-    </div>
-</form> 
 </body>
+</html>

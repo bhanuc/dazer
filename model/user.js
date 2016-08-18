@@ -6,8 +6,7 @@ var Schema = mongoose.Schema,
     oAuthTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'];
 
 var User_schema = new Schema({
-    fname : { type: String, default: ''},
-    lname : { type: String, default: ''},
+    name : { type: String, default: ''},
     email : { type: String, default: ''},
     hash : { type : String, default: ''},
     salt: { type : String, default: ''},
@@ -22,10 +21,9 @@ var User_schema = new Schema({
 mongoose.model('User', User_schema);
 var User = mongoose.model('User');
 
-//pre save hooks
 
 User_schema.pre('save', function (next) {
-  //some pre hooks
+  //Place to add some pre save hook
     next();
 });
 

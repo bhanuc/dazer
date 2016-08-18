@@ -91,7 +91,7 @@ default_router.get('/auth/facebook', passport.authenticate('facebook', { scope :
 //=======================================
 
 default_router.get('/signup', function *() {
-    this.body = yield render('signup');
+    this.body = yield render('signup',{ appname : config.appname});
 });
 
 
@@ -139,7 +139,7 @@ var secured = new Router();
 
 secured.get('/app', function* (){
     var userdetails = this.req.user;
-    this.body = yield render('view.ejs',{ user : userdetails});
+    this.body = yield render('view.ejs',{ user : userdetails,  appname : config.appname});
 })
 
 
