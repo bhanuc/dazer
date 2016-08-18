@@ -4,7 +4,11 @@
 var passport = require('koa-passport');
 var crypto = require('crypto');
 var User = require('./model/user').User;
+var r_pass = require('./model/pass_reset').Pass;
+var config = require('./config/app');
+var nodemailer = require('nodemailer');
 
+var mailTransport = module.exports.mail = nodemailer.createTransport(config.nodemailerConfig);
 
 User.prototype.generateHash = function(password, cb) {
     if (!password) {
@@ -192,3 +196,130 @@ passport.use(new FacebookStrategy({
         });
 
     }));
+
+
+module.exports.check_token = function(token) {
+    return function(done) {
+        r_pass.findOne({
+            '_id': token.token
+        }, function(err, pass) {
+            if (err) {
+                done(null, "Password Reset Token doesn't exists,Please try again")
+            } else {
+                if (pass && pass._id == token.token) {
+                    User.findOne({
+                        'email': pass.email
+                    }, function(err, user) {
+                        crypto.randomBytes(10, function(ex, buf) {
+                            if (ex) throw ex;
+                            var user_password = buf.toString('base64');
+                            user.generateHash(user_password, function generateHash(err, password) {
+                                if (err) {
+                                    return done(err);
+                                }
+                                user.hash = password;
+                                user.save(function save() {
+                                    if (err) {
+                                        return done(err);
+                                    }
+                                    var mailOptions = {
+                                            from: "Noreply <" + config.emailAddress + ">", // sender address
+                                            to: pass.email, // list of receivers
+                                            subject: "Password Has been Reset", // Subject line
+                                            text: "Your Password has been Reset. Your New password is '" + user_password + "'", // plaintext body
+                                            html: "Hello " + pass.email + ",<br><b>At your request, your password has been reset to '" + user_password + "'</b><br>Sincerely,<br>The " + config.appname + " Team"
+                                        }
+                                        // send mail with defined transport object
+                                    mailTransport.sendMail(mailOptions, function(error, response) {
+                                        if (error) {
+                                            console.log(error);
+                                        } else {
+                                            console.log("Message sent: " + response.message);
+                                        }
+                                        // if you don't want to use this transport object anymore, uncomment following line
+                                        //smtpTransport.close(); // shut down the connection pool, no more messages
+                                    });
+                                    pass.remove(function() {
+                                        if (err) {
+                                            done(null, "Password Reset Token not deleted.Please contact support");
+                                        }
+                                    });
+                                    return done(null, {
+                                        message: "Your password has been reset and sent to your email. Please Check you Inbox. It might take few minutes for the email to reach the inbox"
+                                    });
+                                });
+
+                            });
+
+
+                        });
+                    });
+                } else {
+                    done(null, "Sorry the token has expired.Please try to reset the site again");
+                }
+            }
+        });
+    }
+
+};
+
+
+module.exports.create_token = function(token) {
+    return function(done) {
+        User.findOne({
+            'email': token.email
+        }, function findOne(err, user) {
+            if (err) {
+                done(null, "There was some error");
+            } else {
+                if (user) {
+                    r_pass.remove({
+                        'email': token.email
+                    }, function(err, pass) {
+                        if (err) {
+                            done(null, "email not getting");
+                        }
+                        var n_token = new r_pass;
+                        n_token.email = token.email;
+                        n_token.save(function(err) {
+                            if (err) {
+                                throw err;
+                            }
+                            var mailOptions = {
+                                    from: "Noreply <" + config.emailAddress + ">", // sender address
+                                    to: token.email, // list of receivers
+                                    subject: "Password Reset Request", // Subject line
+                                    text: "To reset your password please visit " + config.domainName + "/reset-password?token=" + n_token._id + "&email=" + token.email + " Please Ignore if You haven't made this request", // plaintext body
+                                    html: "Hello " + user.email + ",<br><b>We've received your request to reset your password, and would be glad to help.<br>In order for us to verify you are the account owner, please click the following link to reset your password. Once you do that, a new password will be sent to you in another email.</b><br>Click <a href='" + config.domainName + "/reset-password?token=" + n_token._id + "&email=" + token.email + "'>Here</a> . To reset your password.<br> If It doesn't work copy and paste this url into your browser <br>" + config.domainName + "/reset-password?token=" + n_token._id + "&email=" + token.email + "<br> If you did not request your password to be reset (or you remembered your password), just ignore this messsage; no changes have been made to your account.<br>Sincerely,<br>The " + config.appname + " Team" // html body
+                                }
+                                // send mail with defined transport object
+                            mailTransport.sendMail(mailOptions, function(error, response) {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    console.log("Message sent: " + response.message);
+                                }
+                                // if you don't want to use this transport object anymore, uncomment following line
+                                //smtpTransport.close(); // shut down the connection pool, no more messages
+                            });
+                            done(null, {
+                                status: "An Email has been Sent to your email Id. It might few minutes for the mail to reach the inbox."
+                            });
+
+                        });
+                    });
+                } else {
+                    done(null, "User not registered")
+                }
+            }
+        })
+    }
+};
+
+module.exports.authenticated = function * (next) {
+    if (this.req.isAuthenticated()) {
+        yield next;
+    } else {
+        this.redirect('/login')
+    }
+}

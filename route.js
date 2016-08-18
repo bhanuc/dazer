@@ -27,7 +27,7 @@ var render = views(__dirname + '/' + config.view.folder_name, {
 
 
 // authentication and session
-require('./auth');
+var auth = require('./auth');
 var passport = require('koa-passport');
 app.use(passport.initialize());
 app.use(passport.session());
@@ -39,8 +39,9 @@ require('koa-csrf')(app)
 
 
 app.use(public_dir(__dirname + "/public"));
-var Router = require('koa-router');
 
+
+var Router = require('koa-router');
 var default_router = new Router();
 
 //=======================================
@@ -59,7 +60,8 @@ default_router.get('/', function * () {
 
 default_router.get('/login', function * () {
     this.body = yield render('login.ejs', {
-        appname: config.appname, csrf: this.csrf
+        appname: config.appname,
+        csrf: this.csrf
     });
 });
 
@@ -74,6 +76,7 @@ default_router.post('/login',
         failureRedirect: '/login'
     })
 );
+
 
 //=============================================
 // route for facebook authentication and login
@@ -102,7 +105,19 @@ default_router.get('/auth/facebook/callback',
 
 default_router.get('/signup', function * () {
     this.body = yield render('signup', {
-        appname: config.appname, csrf: this.csrf
+        appname: config.appname,
+        csrf: this.csrf
+    });
+});
+
+//=======================================
+//Contact us Page
+//=======================================
+
+default_router.get('/contact', function * () {
+    this.body = yield render('contact', {
+        appname: config.appname,
+        csrf: this.csrf
     });
 });
 
@@ -129,27 +144,42 @@ default_router.get('/logout', function * (next) {
     this.redirect('/');
 });
 
-/**app.use(function*(next) {
-  this.req.query = this.query;
+//=======================================
+//Render password reset page
+//=======================================
 
-  yield next
-}); **/
-app.use(default_router.middleware());
-
-// =====================================
-// check the login ==============================
-// =====================================
-app.use(function * (next) {
+default_router.get('/resetpassword', function * () {
     if (this.req.isAuthenticated()) {
-        yield next;
+        this.redirect(url + 'app');
     } else {
-        this.redirect('/login')
+        this.body = yield render('reset.ejs', {
+            appname: config.appname
+        });
     }
 });
 
+//=======================================
+//Handle Password Reset request
+//=======================================
+
+default_router.get('/reset-password', function * () {
+    var token = this.request.query;
+    if (token.token) {
+        this.body = yield auth.check_token(token);
+    } else {
+        this.body = yield auth.create_token(token);
+    }
+
+});
+
+
+app.use(default_router.middleware());
+
+
+
 var secured = new Router();
 
-secured.get('/app', function * () {
+secured.get('/app',auth.authenticated, function * () {
     var userdetails = this.req.user;
     this.body = yield render('view.ejs', {
         user: userdetails,
@@ -159,3 +189,29 @@ secured.get('/app', function * () {
 
 
 app.use(secured.middleware())
+
+app.use(function *pageNotFound(next){
+  yield next;
+
+  if (404 != this.status) return;
+
+  // we need to explicitly set 404 here
+  // so that koa doesn't assign 200 on body=
+  this.status = 404;
+
+  switch (this.accepts('html', 'json')) {
+    case 'html':
+      this.type = 'html';
+      this.body = '<p>Page Not Found</p>';
+      break;
+    case 'json':
+      this.body = {
+        message: 'Page Not Found'
+      };
+      break;
+    default:
+      this.type = 'text';
+      this.body = 'Page Not Found';
+  }
+})
+

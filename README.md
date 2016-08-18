@@ -1,7 +1,7 @@
 Dazer
 =====
 
-A mimimal Koa.js Hackathon Starter (currently in alpha phase).
+A mimimal Koa.js Hackathon Starter .
 
 To Use: 
 
@@ -20,8 +20,7 @@ Main Differences with the above project:
 	EJS instead of Jade
 	No Api Examples
 	Only Facebook and Local Oauth integration
-	Currently No tests included
-	Currently No Emails service included
+																																																																																																																						
 
 
 ## Any Kind of help would be welcomed . Just Fork and create a pull request . 

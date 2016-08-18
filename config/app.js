@@ -11,5 +11,16 @@ module.exports = {
         "password": "",
         "url": "localhost",
         "port": 27017
-    }
+    },
+    "nodemailerConfig": {
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // use SSL
+        auth: {
+            user: 'user@gmail.com',
+            pass: 'pass'
+        }
+    },
+    "emailAddress": "noreply@bhanu.io",
+    "domainName": "http://localhost:3000"
 };

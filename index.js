@@ -24,7 +24,8 @@ var koa = require('koa');
 var app = module.exports = koa();
 
 //set the session options
-app.keys = ['secret'];
+
+app.keys = ['session key', 'secret example'];
 app.use(session());
 
 if (config.database.username) {
@@ -42,14 +43,6 @@ if (config.database.username) {
 }
 // MongoDB Error Handling
 db.on('error', console.error.bind(console, 'connection error:'));
-
-
-//use the passport
-
-
-//load the views
-//app.use(mount(views));
-
 
 
 app.use(mount(route));
