@@ -6,8 +6,6 @@
 //load koa
 var koa = require('koa');
 var parse = require('co-body');
-var public_dir = require('koa-static');
-var app = module.exports = koa();
 var views = require('co-views');
 var config = require('./config/app');
 var User = require('./model/user').User;
@@ -29,16 +27,11 @@ var render = views(__dirname + '/' + config.view.folder_name, {
 // authentication and session
 var auth = require('./auth');
 var passport = require('koa-passport');
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-require('koa-csrf')(app)
 
 //use the router
 
 
-app.use(public_dir(__dirname + "/public"));
+
 
 
 var Router = require('koa-router');
@@ -55,7 +48,7 @@ default_router.get('/', function * () {
 });
 
 //=======================================
-//Login PAGE 
+//Login PAGE
 //=======================================
 
 default_router.get('/login', function * () {
@@ -173,8 +166,6 @@ default_router.get('/reset-password', function * () {
 });
 
 
-app.use(default_router.middleware());
-
 
 
 var secured = new Router();
@@ -188,30 +179,8 @@ secured.get('/app',auth.authenticated, function * () {
 })
 
 
-app.use(secured.middleware())
 
-app.use(function *pageNotFound(next){
-  yield next;
-
-  if (404 != this.status) return;
-
-  // we need to explicitly set 404 here
-  // so that koa doesn't assign 200 on body=
-  this.status = 404;
-
-  switch (this.accepts('html', 'json')) {
-    case 'html':
-      this.type = 'html';
-      this.body = '<p>Page Not Found</p>';
-      break;
-    case 'json':
-      this.body = {
-        message: 'Page Not Found'
-      };
-      break;
-    default:
-      this.type = 'text';
-      this.body = 'Page Not Found';
-  }
-})
-
+module.exports = {
+  'secured': secured,
+  'default_router': default_router
+}

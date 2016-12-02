@@ -22,11 +22,19 @@ var mount = require('koa-mount'),
 //load koa
 var koa = require('koa');
 var app = module.exports = koa();
+var public_dir = require('koa-static');
 
+
+var passport = require('koa-passport');
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(public_dir(__dirname + "/public"));
+
+require('koa-csrf')(app)
 //set the session options
 
 app.keys = ['session key', 'secret example'];
-app.use(session());
+app.use(session(app));
 
 if (config.database.username) {
     mongoose.connect('mongodb://' + config.database.username + ':' + config.database.password + '@' + config.database.url + ':' + config.database.port);
@@ -45,12 +53,39 @@ if (config.database.username) {
 db.on('error', console.error.bind(console, 'connection error:'));
 
 
-app.use(mount(route));
+// app.use(mount(route));
+app.use(route.default_router.routes());
+app.use(route.secured.routes());
 
 // Initiate logger
 
 app.use(logger());
 
+
+app.use(function *pageNotFound(next){
+  yield next;
+
+  if (404 != this.status) return;
+
+  // we need to explicitly set 404 here
+  // so that koa doesn't assign 200 on body=
+  this.status = 404;
+
+  switch (this.accepts('html', 'json')) {
+    case 'html':
+      this.type = 'html';
+      this.body = '<p>Page Not Found</p>';
+      break;
+    case 'json':
+      this.body = {
+        message: 'Page Not Found'
+      };
+      break;
+    default:
+      this.type = 'text';
+      this.body = 'Page Not Found';
+  }
+})
 
 if (!module.parent) {
     app.listen(3000);
