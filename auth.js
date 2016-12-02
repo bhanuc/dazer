@@ -101,7 +101,7 @@ passport.use('local-signup', new LocalStrategy({
                     return done(err);
                 }
                 if (user) {
-                    return done(null, false);
+                    return done(null, false,{ message: 'User account already exists' });
                 }
                 // account information is in req.body
                 // you can do your data validation here.
@@ -142,6 +142,73 @@ passport.use('local-signup', new LocalStrategy({
 
 
 
+
+var Boxtrategy = require('passport-box').Strategy;
+var boxconfig = require('./config/oauth.js').boxAuth;
+
+passport.use(new Boxtrategy({
+        clientID: boxconfig.clientID,
+        clientSecret: boxconfig.clientSecret,
+        callbackURL: boxconfig.callbackURL
+    },
+
+    // box will send back the token and profile
+    function(token, refreshToken, profile, done) {
+        // asynchronous
+        process.nextTick(function() {
+
+            // find the user in the database based on their box id
+            User.findOne({
+                'box.id': profile.id
+            }, function(err, user) {
+                // if there is an error, stop everything and return that
+                // ie an error connecting to the database
+                if (err)
+                    return done(err);
+
+                // if the user is found, then log them in
+                if (user) {
+                    user.box.space_amount = profile._json.space_amount;
+                    user.box.space_used = profile._json.space_used;
+                    user.box.max_upload_size = profile._json.max_upload_size;
+                    user.box.token = token;
+                    user.box.refreshToken = refreshToken;
+                    user.markModified('box');
+                    user.save(function save() {
+                        return done(null, user);
+                    });
+                    // user found, return that user
+                } else {
+                    // if there is no user found with that box id, create them
+                    var newUser = new User();
+                    newUser.box = {}
+                    // set all of the box information in our user model
+                    newUser.box.id = profile.id; // set the users box id
+                    newUser.box.token = token;
+                    user.box.refreshToken = refreshToken; // we will save the token that box provides to the user
+                    newUser.box.name = profile._json.login; // look at the passport user profile to see how names are returned
+                    newUser.box.email = profile._json.login; // box can return multiple emails so we'll take the first
+                    newUser.box.space_amount = profile._json.space_amount;
+                    newUser.box.space_used = profile._json.space_used;
+                    newUser.box.max_upload_size = profile._json.max_upload_size;
+                    newUser.name = profile.login;
+                    newUser.email = profile.login;
+                    newUser.markModified('box');
+                    // save our user to the database
+                    newUser.save(function(err) {
+                        if (err)
+                            throw err;
+
+                        // if successful, return the new user
+                        return done(null, newUser);
+                    });
+                }
+
+            });
+        });
+
+    }));
+
 var FacebookStrategy = require('passport-facebook').Strategy;
 var authconfig = require('./config/oauth.js').facebookAuth;
 
@@ -175,8 +242,8 @@ passport.use(new FacebookStrategy({
                     var newUser = new User();
                     newUser.facebook = {}
                     // set all of the facebook information in our user model
-                    newUser.facebook.id = profile.id; // set the users facebook id	                
-                    newUser.facebook.token = token; // we will save the token that facebook provides to the user	                
+                    newUser.facebook.id = profile.id; // set the users facebook id
+                    newUser.facebook.token = token; // we will save the token that facebook provides to the user
                     newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
                     newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
                     newUser.name = profile.displayName;
@@ -195,7 +262,7 @@ passport.use(new FacebookStrategy({
             });
         });
 
-    }));
+}));
 
 
 module.exports.check_token = function(token) {
@@ -223,11 +290,11 @@ module.exports.check_token = function(token) {
                                         return done(err);
                                     }
                                     var mailOptions = {
-                                            from: "Noreply <" + config.emailAddress + ">", // sender address
+                                            from: `Noreply <${config.emailAddress}>`, // sender address
                                             to: pass.email, // list of receivers
                                             subject: "Password Has been Reset", // Subject line
-                                            text: "Your Password has been Reset. Your New password is '" + user_password + "'", // plaintext body
-                                            html: "Hello " + pass.email + ",<br><b>At your request, your password has been reset to '" + user_password + "'</b><br>Sincerely,<br>The " + config.appname + " Team"
+                                            text: `Your Password has been Reset. Your New password is '${user_password}'`, // plaintext body
+                                            html: `Hello ${pass.email},<br><b>At your request, your password has been reset to '${user_password}'</b><br>Sincerely,<br>The ${config.appname} Team`
                                         }
                                         // send mail with defined transport object
                                     mailTransport.sendMail(mailOptions, function(error, response) {
@@ -286,12 +353,12 @@ module.exports.create_token = function(token) {
                                 throw err;
                             }
                             var mailOptions = {
-                                    from: "Noreply <" + config.emailAddress + ">", // sender address
+                                    from: `Noreply <${config.emailAddress}>`, // sender address
                                     to: token.email, // list of receivers
                                     subject: "Password Reset Request", // Subject line
-                                    text: "To reset your password please visit " + config.domainName + "/reset-password?token=" + n_token._id + "&email=" + token.email + " Please Ignore if You haven't made this request", // plaintext body
-                                    html: "Hello " + user.email + ",<br><b>We've received your request to reset your password, and would be glad to help.<br>In order for us to verify you are the account owner, please click the following link to reset your password. Once you do that, a new password will be sent to you in another email.</b><br>Click <a href='" + config.domainName + "/reset-password?token=" + n_token._id + "&email=" + token.email + "'>Here</a> . To reset your password.<br> If It doesn't work copy and paste this url into your browser <br>" + config.domainName + "/reset-password?token=" + n_token._id + "&email=" + token.email + "<br> If you did not request your password to be reset (or you remembered your password), just ignore this messsage; no changes have been made to your account.<br>Sincerely,<br>The " + config.appname + " Team" // html body
-                                }
+                                    text: `To reset your password please visit ${config.domainName}/reset-password?token=${n_token._id}&email=${token.email} Please Ignore if You haven't made this request`, // plaintext body
+                                    html: `Hello ${user.email},<br><b>We've received your request to reset your password, and would be glad to help.<br>In order for us to verify you are the account owner, please click the following link to reset your password. Once you do that, a new password will be sent to you in another email.</b><br>Click <a href='${config.domainName}/reset-password?token=${n_token._id}&email=${token.email}'>Here</a> . To reset your password.<br> If It doesn't work copy and paste this url into your browser <br>${config.domainName}/reset-password?token=${n_token._id}&email=${token.email}<br> If you did not request your password to be reset (or you remembered your password), just ignore this messsage; no changes have been made to your account.<br>Sincerely,<br>The ${config.appname} Team`
+                                  }
                                 // send mail with defined transport object
                             mailTransport.sendMail(mailOptions, function(error, response) {
                                 if (error) {
@@ -299,13 +366,10 @@ module.exports.create_token = function(token) {
                                 } else {
                                     console.log("Message sent: " + response.message);
                                 }
-                                // if you don't want to use this transport object anymore, uncomment following line
-                                //smtpTransport.close(); // shut down the connection pool, no more messages
                             });
                             done(null, {
                                 status: "An Email has been Sent to your email Id. It might few minutes for the mail to reach the inbox."
                             });
-
                         });
                     });
                 } else {

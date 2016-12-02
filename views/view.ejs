@@ -1,13 +1,6 @@
 <!DOCTYPE html>
-<title>Profile
-</title>
-<head>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.indigo-pink.min.css">
-  <link rel="stylesheet" href="/css/other.css">
-  <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
-  
-</head>
+<title>Profile</title>
+<head><% include ./partial/header %></head>
 <body>
   <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
     <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
@@ -17,7 +10,7 @@
         </button></span></a>
         <div class="mdl-layout-spacer"></div>
         <div >
-          
+
           <a href="/logout">
             <button class="mdl-button mdl-js-button " type="submit">
             Logout
@@ -35,18 +28,10 @@
           Name: <%= user.name %> <br>
           Email: <%= user.email %> <br>
         </div>
-        
+
       </div>
     </div>
-    <footer class="demo-footer mdl-mini-footer">
-      <div class="mdl-mini-footer--left-section">
-        <ul class="mdl-mini-footer--link-list">
-          <li><a href="#">Help</a></li>
-          <li><a href="#">Privacy and Terms</a></li>
-          <li><a href="#">User Agreement</a></li>
-        </ul>
-      </div>
-    </footer>
+    <% include ./partial/footer %>
     </main>
   </div>
 </body>
