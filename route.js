@@ -1,186 +1,172 @@
-/*jslint node:true*/
 
-/**
- * Module dependencies.
- */
-//load koa
-var koa = require('koa');
-var parse = require('co-body');
-var views = require('co-views');
-var config = require('./config/app');
-var User = require('./model/user').User;
-var formidable = require('koa-formidable');
-
-var parser = function * parser(next) {
-    this.req.body = yield parse(this);
-    yield next;
-}
+const parse = require('co-body');
+const views = require('co-views');
+const config = require('./config/app');
 
 
-var render = views(__dirname + '/' + config.view.folder_name, {
-    ext: config.view.engine
+const parser = async (ctx, next) => {
+  ctx.req.body = await parse(this);
+  await next;
+};
+
+
+const render = views(`${__dirname}/${config.view.folder_name}`, {
+  ext: config.view.engine,
 });
-
-
 
 
 // authentication and session
-var auth = require('./auth');
-var passport = require('koa-passport');
+const auth = require('./auth');
+const passport = require('koa-passport');
 
-//use the router
-
-
+// use the router
 
 
+const Router = require('koa-router');
 
-var Router = require('koa-router');
-var default_router = new Router();
+const baseRouter = new Router();
 
-//=======================================
-//HOME PAGE (containing loging links)
-//=======================================
+//= ======================================
+// HOME PAGE (containing loging links)
+//= ======================================
 
-default_router.get('/', function * () {
-    this.body = yield render('home.ejs', {
-        appname: config.appname
-    });
+baseRouter.get('/', async (ctx) => {
+  ctx.body = await render('home.ejs', {
+    appname: config.appname,
+  });
 });
 
-//=======================================
-//Login PAGE
-//=======================================
+//= ======================================
+// Login PAGE
+//= ======================================
 
-default_router.get('/login', function * () {
-    this.body = yield render('login.ejs', {
-        appname: config.appname,
-        csrf: this.csrf
-    });
+baseRouter.get('/login', async (ctx) => {
+  ctx.body = await render('login.ejs', {
+    appname: config.appname,
+    csrf: ctx.csrf,
+  });
 });
 
-//=======================================
-//handle login request from the form
-//=======================================
+//= ======================================
+// handle login request from the form
+//= ======================================
 
-default_router.post('/login',
-    parser,
-    passport.authenticate('local-signin', {
-        successRedirect: '/app',
-        failureRedirect: '/login'
-    })
+baseRouter.post(
+  '/login',
+  parser,
+  passport.authenticate('local-signin', {
+    successRedirect: '/app',
+    failureRedirect: '/login',
+  }),
 );
 
 
-//=============================================
+//= ============================================
 // route for facebook authentication and login
-//=============================================
+//= ============================================
 
-default_router.get('/auth/facebook', passport.authenticate('facebook', {
-    scope: 'email'
+baseRouter.get('/auth/facebook', passport.authenticate('facebook', {
+  scope: 'email',
 }));
 
-//=============================profile=================================
+//= ============================profile=================================
 // handle the callback after facebook has authenticated the user
-//==============================================================
+//= =============================================================
 
-default_router.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-        successRedirect: '/app',
-        failureRedirect: '/'
-    }));
-
-
-
-
-//=======================================
-//Render sign up page
-//=======================================
-
-default_router.get('/signup', function * () {
-    this.body = yield render('signup', {
-        appname: config.appname,
-        csrf: this.csrf
-    });
-});
-
-//=======================================
-//Contact us Page
-//=======================================
-
-default_router.get('/contact', function * () {
-    this.body = yield render('contact', {
-        appname: config.appname,
-        csrf: this.csrf
-    });
-});
-
-
-//=======================================
-//Handle sign-up post request from the form
-//=======================================// POST /signup
-default_router.post('/signup',
-    parser,
-    passport.authenticate('local-signup', {
-        successRedirect: '/app',
-        failureRedirect: '/signup'
-    })
+baseRouter.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/app',
+    failureRedirect: '/',
+  }),
 );
 
+
+//= ======================================
+// Render sign up page
+//= ======================================
+
+baseRouter.get('/signup', async (ctx) => {
+  ctx.body = await render('signup', {
+    appname: config.appname,
+    csrf: ctx.csrf,
+  });
+});
+
+//= ======================================
+// Contact us Page
+//= ======================================
+
+baseRouter.get('/contact', async (ctx) => {
+  ctx.body = await render('contact', {
+    appname: config.appname,
+    csrf: ctx.csrf,
+  });
+});
+
+
+//= ======================================
+// Handle sign-up post request from the form
+//= ======================================// POST /signup
+baseRouter.post(
+  '/signup',
+  parser,
+  passport.authenticate('local-signup', {
+    successRedirect: '/app',
+    failureRedirect: '/signup',
+  }),
+);
 
 
 // =====================================
 // LOGOUT ==============================
 // =====================================
 
-default_router.get('/logout', function * (next) {
-    this.req.logout();
-    this.redirect('/');
+baseRouter.get('/logout', async (ctx) => {
+  ctx.req.logout();
+  ctx.redirect('/');
 });
 
-//=======================================
-//Render password reset page
-//=======================================
+//= ======================================
+// Render password reset page
+//= ======================================
 
-default_router.get('/resetpassword', function * () {
-    if (this.req.isAuthenticated()) {
-        this.redirect(url + 'app');
-    } else {
-        this.body = yield render('reset.ejs', {
-            appname: config.appname
-        });
-    }
-});
-
-//=======================================
-//Handle Password Reset request
-//=======================================
-
-default_router.get('/reset-password', function * () {
-    var token = this.request.query;
-    if (token.token) {
-        this.body = yield auth.check_token(token);
-    } else {
-        this.body = yield auth.create_token(token);
-    }
-
-});
-
-
-
-
-var secured = new Router();
-
-secured.get('/app',auth.authenticated, function * () {
-    var userdetails = this.req.user;
-    this.body = yield render('view.ejs', {
-        user: userdetails,
-        appname: config.appname
+baseRouter.get('/resetpassword', async (ctx) => {
+  if (ctx.req.isAuthenticated()) {
+    ctx.redirect(`${config.domainName}/app`);
+  } else {
+    ctx.body = await render('reset.ejs', {
+      appname: config.appname,
     });
-})
+  }
+});
 
+//= ======================================
+// Handle Password Reset request
+//= ======================================
+
+baseRouter.get('/reset-password', async (ctx) => {
+  const token = ctx.request.query;
+  if (token.token) {
+    ctx.body = await auth.check_token(token);
+  } else {
+    ctx.body = await auth.create_token(token);
+  }
+});
+
+
+const secured = new Router();
+
+secured.get('/app', auth.authenticated, async (ctx) => {
+  const userdetails = this.req.user;
+  ctx.body = await render('view.ejs', {
+    user: userdetails,
+    appname: config.appname,
+  });
+});
 
 
 module.exports = {
-  'secured': secured,
-  'default_router': default_router
-}
+  secured,
+  baseRouter,
+};

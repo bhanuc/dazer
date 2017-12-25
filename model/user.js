@@ -1,41 +1,37 @@
-/*jslint node:true*/
-'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId,
-    oAuthTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'];
 
-var User_schema = new Schema({
-    name: {
-        type: String,
-        default: ''
-    },
-    email: {
-        type: String,
-        default: ''
-    },
-    hash: {
-        type: String,
-        default: ''
-    },
-    salt: {
-        type: String,
-        default: ''
-    },
-    authToken: {
-        type: String,
-        default: ''
-    },
-    facebook: Schema.Types.Mixed
+const mongoose = require('mongoose');
+
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+    default: '',
+  },
+  email: {
+    type: String,
+    default: '',
+  },
+  hash: {
+    type: String,
+    default: '',
+  },
+  salt: {
+    type: String,
+    default: '',
+  },
+  authToken: {
+    type: String,
+    default: '',
+  },
+  facebook: mongoose.Schema.Types.Mixed,
 });
 
-mongoose.model('User', User_schema);
-var User = mongoose.model('User');
+mongoose.model('User', userSchema);
+const User = mongoose.model('User');
 
 
-User_schema.pre('save', function(next) {
-    //Place to add some pre save hook
-    next();
+userSchema.pre('save', (next) => {
+  // Place to add some pre save hook
+  next();
 });
 
 
